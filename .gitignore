@@ -1,0 +1,24 @@
+# Arquivos de cache Python
+__pycache__/
+
+# Outros arquivos de cache
+*.pyc
+
+# Arquivos de configuração
+*.ini
+*.cfg
+*.conf
+
+# Arquivos temporários
+*.swp
+*.bak
+*.~*
+
+# Diretórios de saída
+__pycache__/
+dist/
+build/
+*.egg-info/
+
+# Arquivos de ambiente virtual (se você estiver usando um ambiente virtual)
+venv/
