@@ -59,7 +59,12 @@ def valida_contrato(contrato):
         raise ValueError("Contrato inválido")
     return contrato
 
-def validar_dados_notificacao(grupo, cota, data_envio, data_retorno, tipo_retorno, escritorio, uf, cartorio, nome, contrato):
+def valida_justificativa(justificativa):
+    if not justificativa or pd.isna(justificativa):
+        raise ValueError("Justificativa não pode ser vazia ou nula")
+    return justificativa
+
+def validar_dados_notificacao(grupo, cota, data_envio, data_retorno, tipo_retorno, escritorio, uf, cartorio, nome, contrato, justificativa):
     erros = []
 
     try:
@@ -111,5 +116,10 @@ def validar_dados_notificacao(grupo, cota, data_envio, data_retorno, tipo_retorn
         valida_nome(nome)
     except ValueError as e:
         erros.append("Nome")
+
+    try:
+        valida_justificativa(justificativa)
+    except ValueError as e:
+        erros.append("Justificativa")
 
     return len(erros) == 0, erros

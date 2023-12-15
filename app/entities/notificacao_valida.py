@@ -2,8 +2,8 @@ from utils.validacoes_notificacoes import *
 from exceptions.notificacao_exception import ErroNotificacao
 
 class NotificacaoValida:
-    def __init__(self, grupo, cota, data_envio, data_retorno, tipo_retorno, escritorio, uf, cartorio, nome, contrato):
-        valido, erros = validar_dados_notificacao(grupo, cota, data_envio, data_retorno, tipo_retorno, escritorio, uf, cartorio, nome, contrato)
+    def __init__(self, grupo, cota, data_envio, data_retorno, tipo_retorno, escritorio, uf, cartorio, nome, contrato, justificativa):
+        valido, erros = validar_dados_notificacao(grupo, cota, data_envio, data_retorno, tipo_retorno, escritorio, uf, cartorio, nome, contrato, justificativa)
         if not valido:
             raise ErroNotificacao(erros)
         
@@ -17,6 +17,7 @@ class NotificacaoValida:
         self._cartorio = cartorio
         self._nome = nome
         self._contrato = contrato
+        self._justificativa = justificativa
 
     # Getters e Setters com validação
     def get_grupo(self):
@@ -78,6 +79,12 @@ class NotificacaoValida:
 
     def set_contrato(self, contrato):
         self._contrato = valida_contrato(contrato)
+
+    def get_justificativa(self):
+        return self._justificativa
+    
+    def set_justificativa(self, justificativa):
+        self._justificativa = valida_justificativa(justificativa)
         
     # Métodos mágicos
     def __eq__(self, other):
@@ -92,4 +99,4 @@ class NotificacaoValida:
         return (f"Notificacao(grupo={self._grupo}, cota={self._cota}, data_envio={self._data_envio}, "
                 f"data_retorno={self._data_retorno}, tipo_retorno={self._tipo_retorno}, "
                 f"escritorio={self._escritorio}, uf={self._uf}, cartorio={self._cartorio}, "
-                f"nome={self._nome}, contrato={self._contrato})")
+                f"nome={self._nome}, contrato={self._contrato}, justificativa={self._justificativa})")

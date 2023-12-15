@@ -14,7 +14,9 @@ def criar_notificacao(dados):
             uf=dados['UF'],
             cartorio=dados.get('Cartório'),
             nome=dados.get('Nome'),
-            contrato=dados.get('Contrato')
+            contrato=dados.get('Contrato'),
+            justificativa=dados.get("Justificativa")
+
         )
         return notificacao
     except ErroNotificacao as e:
