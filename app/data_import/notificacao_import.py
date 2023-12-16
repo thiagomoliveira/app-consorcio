@@ -14,4 +14,3 @@ def importar_notificacao(caminho_arquivo):
             notificacoes_validas.append(notificacao)
 
     return notificacoes_validas, notificacoes_invalidas
-
