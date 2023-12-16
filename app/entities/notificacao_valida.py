@@ -1,4 +1,6 @@
 from utils.validacoes_notificacoes import *
+from utils.conversoes_tipos import converter_data
+
 from exceptions.notificacao_exception import ErroNotificacao
 
 class NotificacaoValida:
@@ -9,8 +11,8 @@ class NotificacaoValida:
         
         self._grupo = grupo
         self._cota = cota
-        self._data_envio = data_envio
-        self._data_retorno = data_retorno
+        self._data_envio = converter_data(data_envio)
+        self._data_retorno = converter_data(data_retorno)
         self._tipo_retorno = tipo_retorno
         self._escritorio = escritorio
         self._uf = uf
