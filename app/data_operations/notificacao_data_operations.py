@@ -41,12 +41,12 @@ def agrupar_notificacoes_por_tipo_e_data(notificacoes, granularidade='mensal'):
         dados_agrupados[chave] += 1
 
     # Convertendo o dicionário agrupado em um DataFrame para visualização
-    df_agrupado = pd.DataFrame(list(dados_agrupados.items()), columns=['MêsDeEnvio_Tipo', 'Contagem'])
-    df_agrupado[['MêsDeEnvio', 'TipoDeRetorno']] = pd.DataFrame(df_agrupado['MêsDeEnvio_Tipo'].tolist(), index=df_agrupado.index)
-    df_agrupado.drop(columns=['MêsDeEnvio_Tipo'], inplace=True)
+    df_agrupado = pd.DataFrame(list(dados_agrupados.items()), columns=['DataDeEnvio_Tipo', 'Contagem'])
+    df_agrupado[['DataDeEnvio', 'TipoDeRetorno']] = pd.DataFrame(df_agrupado['DataDeEnvio_Tipo'].tolist(), index=df_agrupado.index)
+    df_agrupado.drop(columns=['DataDeEnvio_Tipo'], inplace=True)
 
     # Reestruturando o DataFrame para melhor visualização
-    df_agrupado = df_agrupado.pivot_table(index='MêsDeEnvio', columns='TipoDeRetorno', values='Contagem', fill_value=0)
+    df_agrupado = df_agrupado.pivot_table(index='DataDeEnvio', columns='TipoDeRetorno', values='Contagem', fill_value=0)
 
     # Garantindo que todos os tipos de retorno estejam presentes
     for tipo in tipos_retorno:
