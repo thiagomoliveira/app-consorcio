@@ -1,38 +1,38 @@
 import pandas as pd
+from datetime import timedelta
 from utils.conversoes_tipos import converter_data
+import calendar
+
+ 
 
 def filtrar_notificacoes(notificacoes, data_inicio=None, data_fim=None, estados=None):
     notificacoes_filtradas = []
-    for notificacao in notificacoes:
-        if data_inicio:
+    if data_inicio:
             data_inicio = converter_data(data_inicio)
-        if data_fim:
-            data_fim = converter_data(data_fim)
+    if data_fim:
+        data_fim = converter_data(data_fim)
+        ultimo_dia = calendar.monthrange(data_fim.year, data_fim.month)[1]
+        data_fim = data_fim.replace(day=ultimo_dia)
+    for notificacao in notificacoes:
         data_envio = notificacao.get_data_envio()
         estado = notificacao.get_uf()
-
-
-        if (data_inicio and data_envio < data_inicio) or (data_fim and data_envio > data_fim):
+        if (data_inicio and data_envio <= data_inicio) or (data_fim and data_envio >= data_fim):
             continue
         if estados and estado not in estados:
             continue
-
         notificacoes_filtradas.append(notificacao)
-
     return notificacoes_filtradas
 
 def agrupar_notificacoes_por_tipo_e_data(notificacoes, granularidade='mensal'):
     # Tipos de retorno esperados
     tipos_retorno = ["positiva", "negativa", "notificando"]
     dados_agrupados = {}
-
     for notificacao in notificacoes:
         data_envio = notificacao.get_data_envio()
 
         # Ajustando a data para incluir apenas o ano e o mês
         if granularidade == 'mensal':
             data_envio = data_envio.strftime('%Y-%m')
-
         tipo_retorno = notificacao.get_tipo_retorno()
         chave = (data_envio, tipo_retorno)
 
@@ -52,5 +52,4 @@ def agrupar_notificacoes_por_tipo_e_data(notificacoes, granularidade='mensal'):
     for tipo in tipos_retorno:
         if tipo not in df_agrupado.columns:
             df_agrupado[tipo] = 0
-
     return df_agrupado
