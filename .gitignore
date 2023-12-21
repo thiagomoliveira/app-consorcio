@@ -22,3 +22,10 @@ build/
 
 # Arquivos de ambiente virtual (se você estiver usando um ambiente virtual)
 venv/
+
+# Arquivos específicos do projeto
+mainTeste.py
+teste.py
+
+# Arquivos de dados
+*.xlsx
