@@ -1,6 +1,15 @@
-function setDescriptionContent(description, state) {
-    description.innerHTML = state;
+let mapData = {};
+
+function receiveData(data) {
+    mapData = data;
 }
+
+function setDescriptionContent(description, stateId) {
+    // Verifica se o estado está nos dados, se não estiver, define total como 0
+    const totalNotificacoes = mapData[stateId] ? mapData[stateId].total : 0;
+    description.innerHTML = `Total: ${totalNotificacoes}`;
+}
+
 
 function configureDescription(descriptionSelector) {
     const description = document.querySelector(descriptionSelector);

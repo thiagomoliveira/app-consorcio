@@ -2,10 +2,12 @@ import os
 from PyQt5.QtWidgets import QWidget, QVBoxLayout
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtCore import QUrl, QSize
+import json
 
 class BrasilMapWidget(QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, data, parent=None):
         super(BrasilMapWidget, self).__init__(parent)
+        self.data = data
         layout = QVBoxLayout()
         self.browser = QWebEngineView()
         self.setMaximumSize(QSize(800, 850))
@@ -20,3 +22,9 @@ class BrasilMapWidget(QWidget):
         self.browser.setUrl(QUrl.fromLocalFile(html_file_path))
         layout.addWidget(self.browser)
         self.setLayout(layout)
+        self.browser.loadFinished.connect(self.inject_data)
+
+    
+    def inject_data(self):
+        json_data = json.dumps(self.data)
+        self.browser.page().runJavaScript(f"receiveData({json_data});")

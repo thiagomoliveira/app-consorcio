@@ -2,7 +2,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-  }
+    }
   .container{
     width: 100%;
     display: flex;
@@ -17,6 +17,7 @@ body {
     fill: red;
     stroke: #000;
     stroke-width: 1px;
+    cursor: pointer;
   }
   path:hover {
     fill: purple;
@@ -33,6 +34,7 @@ body {
     padding: 10px 15px;
     z-index: 5;
     height: 30px;
+    width: 70px;
     line-height: 30px;
     margin: 0 auto;
     color: #21669e;
