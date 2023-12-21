@@ -1,5 +1,5 @@
 from data_import.notificacao_import import importar_notificacao
-from data_operations.notificacao_data_operations import filtrar_notificacoes, agrupar_notificacoes_por_tipo_e_data
+from data_operations.notificacao_data_operations import *
 from datetime import datetime
 
 class NotificacaoController:
@@ -13,7 +13,12 @@ class NotificacaoController:
             self.notificacoes_validas, data_inicio='01/01/2010', data_fim=data_atual_str)
         return agrupar_notificacoes_por_tipo_e_data(notificacoes_filtradas)
 
-    def get_filtered_data(self, start_date, end_date, states):
+    def get_aggregated_data_by_type_and_date(self, start_date, end_date, states):
         notificacoes_filtradas = filtrar_notificacoes(
             self.notificacoes_validas, data_inicio=start_date, data_fim=end_date, estados=states)
         return agrupar_notificacoes_por_tipo_e_data(notificacoes_filtradas)
+    
+    def get_aggregated_data_by_state(self, start_date = None, end_date = None):
+        notificacoes_filtradas = filtrar_notificacoes(
+            self.notificacoes_validas, data_inicio=start_date, data_fim=end_date)
+        return agrupar_notificacoes_por_estado(notificacoes_filtradas)

@@ -53,3 +53,22 @@ def agrupar_notificacoes_por_tipo_e_data(notificacoes, granularidade='mensal'):
         if tipo not in df_agrupado.columns:
             df_agrupado[tipo] = 0
     return df_agrupado
+
+def agrupar_notificacoes_por_estado(notificacoes):
+    agrupamento_por_estado = {}
+    for notificacao in notificacoes:
+        estado = notificacao.get_uf()
+        tipo_retorno = notificacao.get_tipo_retorno()
+        
+        if estado not in agrupamento_por_estado:
+            agrupamento_por_estado[estado] = {'total': 0, 'positiva': 0, 'negativa': 0, 'notificando': 0}
+        
+        agrupamento_por_estado[estado]['total'] += 1
+        if tipo_retorno == 'positiva':
+            agrupamento_por_estado[estado]['positiva'] += 1
+        elif tipo_retorno == 'negativa':
+            agrupamento_por_estado[estado]['negativa'] += 1
+        elif tipo_retorno == 'notificando':
+            agrupamento_por_estado[estado]['notificando'] += 1
+    
+    return agrupamento_por_estado
