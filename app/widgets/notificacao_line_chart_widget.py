@@ -1,6 +1,5 @@
 from PyQt5.QtWidgets import QVBoxLayout, QWidget
 from charts.line_chart import LineChart
-from PyQt5.QtCore import QSize
 
 class NotificationLineChartWidget(QWidget):
     def __init__(self, dataframe):
@@ -16,8 +15,6 @@ class NotificationLineChartWidget(QWidget):
                                xlabel="", ylabel="Quantidade",
                                color_map=self.color_map)
         self.layout.addWidget(self.chart)
-        self.setMaximumSize(QSize(800, 600))
-        self.setMinimumSize(QSize(600, 450))
         self.chart.draw()
 
     def process_dataframe(self, dataframe):
