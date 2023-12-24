@@ -3,9 +3,9 @@ from PyQt5.QtCore import pyqtSignal, QRegExp, Qt, QSize
 from PyQt5.QtGui import QRegExpValidator
 import re
 
-class FiltroWidget(QWidget):
-    # Sinal que será emitido quando os filtros forem aplicados
-    filtrosAplicados = pyqtSignal(str, str, list)
+class FilterWidget(QWidget):
+    # Signal emitted when filters are applied
+    filtersApplied = pyqtSignal(str, str, list)
 
     def __init__(self, controller):
         super().__init__()
@@ -17,37 +17,37 @@ class FiltroWidget(QWidget):
         self.setMaximumSize(QSize(200, 600))
         self.setMinimumSize(QSize(200, 450))
 
-        # Label e campo de entrada para a data de início
-        self.layout.addWidget(QLabel('Data de Início:'))
-        self.data_inicio_edit = QLineEdit()
-        self.data_inicio_edit.setPlaceholderText("01/2010")
-        self.data_inicio_edit.setValidator(QRegExpValidator(QRegExp(r"(0[1-9]|1[0-2])\/\d{4}")))
-        self.layout.addWidget(self.data_inicio_edit)
+        # Label and input field for start date
+        self.layout.addWidget(QLabel('Data de início:'))
+        self.start_date_edit = QLineEdit()
+        self.start_date_edit.setPlaceholderText("01/2010")
+        self.start_date_edit.setValidator(QRegExpValidator(QRegExp(r"(0[1-9]|1[0-2])\/\d{4}")))
+        self.layout.addWidget(self.start_date_edit)
 
-        # Label e campo de entrada para a data final
-        self.layout.addWidget(QLabel('Data Final:'))
-        self.data_final_edit = QLineEdit()
-        self.data_final_edit.setPlaceholderText("12/2020")
-        self.data_final_edit.setValidator(QRegExpValidator(QRegExp(r"(0[1-9]|1[0-2])\/\d{4}")))
-        self.layout.addWidget(self.data_final_edit)
+        # Label and input field for end date
+        self.layout.addWidget(QLabel('Data final:'))
+        self.end_date_edit = QLineEdit()
+        self.end_date_edit.setPlaceholderText("12/2023")
+        self.end_date_edit.setValidator(QRegExpValidator(QRegExp(r"(0[1-9]|1[0-2])\/\d{4}")))
+        self.layout.addWidget(self.end_date_edit)
         self.setDefaultDateRange()
 
-        # Label e ComboBox para o filtro de UF
-        self.layout.addWidget(QLabel('Selecione as UFs:'))
+        # Label and ComboBox for state filter
+        self.layout.addWidget(QLabel('Selecione os Estados:'))
         self.scroll_area = QScrollArea(self)
         self.scroll_widget = QWidget()
         self.scroll_layout = QVBoxLayout(self.scroll_widget)
-        ufs = ['Todos', 'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO']
+        states = ['Todos', 'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO']
         self.checkboxes = []
 
-        for uf in ufs:
-            checkbox = QCheckBox(uf, self.scroll_widget)
+        for state in states:
+            checkbox = QCheckBox(state, self.scroll_widget)
             self.scroll_layout.addWidget(checkbox)
             self.checkboxes.append(checkbox)
 
-        self.todos_checkbox = next((cb for cb in self.checkboxes if cb.text() == 'Todos'), None)
-        self.todos_checkbox.setChecked(True)
-        self.todos_checkbox.stateChanged.connect(self.handleTodosCheckbox)
+        self.all_checkbox = next((cb for cb in self.checkboxes if cb.text() == 'Todos'), None)
+        self.all_checkbox.setChecked(True)
+        self.all_checkbox.stateChanged.connect(self.handleAllCheckbox)
         self.scroll_widget.setLayout(self.scroll_layout)
         self.scroll_area.setWidget(self.scroll_widget)
         self.scroll_area.setWidgetResizable(True)
@@ -57,49 +57,45 @@ class FiltroWidget(QWidget):
             if checkbox.text() != 'Todos':
                 checkbox.stateChanged.connect(self.handleStateCheckboxes)
 
-        # Botão de Aplicar Filtros
-        self.btn_aplicar = QPushButton('Aplicar Filtros')
-        self.btn_aplicar.clicked.connect(self.aplicarFiltros)
-        self.layout.addWidget(self.btn_aplicar)
+        # Apply Filters Button
+        self.apply_button = QPushButton('Aplicar filtros')
+        self.apply_button.clicked.connect(self.applyFilters)
+        self.layout.addWidget(self.apply_button)
 
     def setDefaultDateRange(self):
-        # Carrega os dados iniciais e define a data mais antiga e mais recente
+        # Load initial data and set the earliest and latest date
         initial_data = self.controller.get_initial_data()
         min_date_str = initial_data.index.min()
         max_date_str = initial_data.index.max()
-        self.data_inicio_edit.setText(self.format_date(min_date_str))
-        self.data_final_edit.setText(self.format_date(max_date_str))
+        self.start_date_edit.setText(self.formatDate(min_date_str))
+        self.end_date_edit.setText(self.formatDate(max_date_str))
 
-    def format_date(self, date_str):
+    def formatDate(self, date_str):
         year, month = date_str.split('-')
         return f"{month}/{year}"
 
-    def aplicarFiltros(self):
-        # Emite o sinal com os valores dos filtros
-        data_inicio_str = self.data_inicio_edit.text()
-        data_final_str = self.data_final_edit.text()
+    def applyFilters(self):
+        # Emit the signal with filter values
+        start_date_str = self.start_date_edit.text()
+        end_date_str = self.end_date_edit.text()
 
-        # Verifica se as datas estão no formato correto
-        if re.match(r"(0[1-9]|1[0-2])\/\d{4}", data_inicio_str) and re.match(r"(0[1-9]|1[0-2])\/\d{4}", data_final_str):
-            self.filtrosAplicados.emit(data_inicio_str, data_final_str, self.getSelectedUFs())
+        # Check if the dates are in the correct format
+        if re.match(r"(0[1-9]|1[0-2])\/\d{4}", start_date_str) and re.match(r"(0[1-9]|1[0-2])\/\d{4}", end_date_str):
+            self.filtersApplied.emit(start_date_str, end_date_str, self.getSelectedStates())
         else:
-            print("Datas em formato incorreto")
+            print("Incorrect date format")
 
- 
-
-    def getSelectedUFs(self):
-        ufs_selecionadas = []
-        if self.todos_checkbox and self.todos_checkbox.isChecked():
-            return ufs_selecionadas
+    def getSelectedStates(self):
+        selected_states = []
+        if self.all_checkbox and self.all_checkbox.isChecked():
+            return selected_states
 
         for checkbox in self.checkboxes:
             if checkbox.isChecked() and checkbox.text() != 'Todos':
-                ufs_selecionadas.append(checkbox.text())
-        return ufs_selecionadas
+                selected_states.append(checkbox.text())
+        return selected_states
 
- 
-
-    def handleTodosCheckbox(self, state):
+    def handleAllCheckbox(self, state):
         if state == Qt.Checked:
             for checkbox in self.checkboxes:
                 if checkbox.text() != 'Todos':
@@ -107,6 +103,6 @@ class FiltroWidget(QWidget):
 
     def handleStateCheckboxes(self, state):
         if state == Qt.Checked:
-            self.todos_checkbox.setChecked(False)
+            self.all_checkbox.setChecked(False)
         elif all(not cb.isChecked() for cb in self.checkboxes if cb.text() != 'Todos'):
-            self.todos_checkbox.setChecked(True)
+            self.all_checkbox.setChecked(True)

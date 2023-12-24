@@ -5,11 +5,10 @@ function receiveData(data) {
 }
 
 function setDescriptionContent(description, stateId) {
-    // Verifica se o estado está nos dados, se não estiver, define total como 0
-    const totalNotificacoes = mapData[stateId] ? mapData[stateId].total : 0;
-    description.innerHTML = `Total: ${totalNotificacoes}`;
+    // Check if the state is in the data; if not, set total to 0
+    const totalNotifications = mapData[stateId] ? mapData[stateId].todas : 0;
+    description.innerHTML = `Total: ${totalNotifications}`;
 }
-
 
 function configureDescription(descriptionSelector) {
     const description = document.querySelector(descriptionSelector);
@@ -34,5 +33,4 @@ function configureDescription(descriptionSelector) {
     };
 }
 
-
-configureDescription(".tooltip")
+configureDescription(".tooltip");

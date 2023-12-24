@@ -1,31 +1,47 @@
-# Arquivos de cache Python
+# Python bytecode
 __pycache__/
+*.py[cod]
 
-# Outros arquivos de cache
-*.pyc
+# Packages
+*.egg
+*.egg-info/
+dist/
+build/
+libs/
 
-# Arquivos de configuração
+# Configuration files
 *.ini
 *.cfg
 *.conf
 
-# Arquivos temporários
+# Temporary files
 *.swp
 *.bak
-*.~*
+*.tmp
+*.temp
 
-# Diretórios de saída
-__pycache__/
-dist/
-build/
-*.egg-info/
-
-# Arquivos de ambiente virtual (se você estiver usando um ambiente virtual)
+# Virtual Environments
 venv/
+.env
+env/
 
-# Arquivos específicos do projeto
-mainTeste.py
-teste.py
+# IDEs and editors
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
 
-# Arquivos de dados
+# Operating System
+.DS_Store
+Thumbs.db
+
+# Data files
+*.csv
 *.xlsx
+*.json
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+*.db
