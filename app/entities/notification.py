@@ -1,17 +1,13 @@
 from utils.notification_validations import *
 from utils.type_conversion import convert_date
-from exceptions.notification_exception import NotificationException
 
-class ValidNotification:
+class Notification:
     def __init__(self, group, quota, send_date, return_date, notification_return_type, office, state, registry_office, name, contract, justification):
-        valid, errors = validate_notification_data(group, quota, send_date, return_date, notification_return_type, office, state, registry_office, name, contract, justification)
-        if not valid:
-            raise NotificationException(errors)
-        
+        # Initialize all attributes
         self._group = group
         self._quota = quota
-        self._send_date = convert_date(send_date)
-        self._return_date = convert_date(return_date)
+        self._send_date = send_date
+        self._return_date = return_date
         self._notification_return_type = notification_return_type
         self._office = office
         self._state = state
@@ -19,6 +15,19 @@ class ValidNotification:
         self._name = name
         self._contract = contract
         self._justification = justification
+        
+        # Perform validation
+        self.is_valid, self.errors = validate_notification_data(
+            group, quota, send_date, return_date, notification_return_type, office, state, registry_office, name, contract, justification)
+        
+        # Convert the dates if the notification is valid
+        if self.is_valid:
+            self._send_date = convert_date(send_date)
+            self._return_date = convert_date(return_date)
+        else:
+            # Set attributes for invalid notifications
+            self._send_date = send_date
+            self._return_date = return_date
 
     # Getters and Setters with validation
     def get_group(self):
@@ -87,9 +96,25 @@ class ValidNotification:
     def set_justification(self, justification):
         self._justification = validate_not_empty(justification, "Justification")
 
+    def revalidate(self):
+        # Reapply the validation logic
+        self.is_valid, self.errors = validate_notification_data(
+            self._group, self._quota, self._send_date, self._return_date, self._notification_return_type,
+            self._office, self._state, self._registry_office, self._name, self._contract, self._justification
+        )
+
+        # Convert the dates if the notification is valid
+        if self.is_valid:
+            self._send_date = convert_date(self._send_date)
+            self._return_date = convert_date(self._return_date)
+            return {"status": "success", "message": "Notification successfully validated."}
+        else:
+            # Return information about the validation errors
+            return {"status": "error", "message": "Validation errors found.", "errors": self.errors}
+
     # Magic methods
     def __eq__(self, other):
-        if not isinstance(other, ValidNotification):
+        if not isinstance(other, Notification):
             return False
         return (self._group, self._quota) == (other._group, other._quota)
 
@@ -97,7 +122,8 @@ class ValidNotification:
         return hash((self._group, self._quota))
 
     def __str__(self):
-        return (f"NotificationValid(group={self._group}, quota={self._quota}, send_date={self._send_date}, "
+        return (f"Notification(group={self._group}, quota={self._quota}, send_date={self._send_date}, "
                 f"return_date={self._return_date}, notification_return_type={self._notification_return_type}, "
                 f"office={self._office}, state={self._state}, registry_office={self._registry_office}, "
-                f"name={self._name}, contract={self._contract}, justification={self._justification})")
+                f"name={self._name}, contract={self._contract}, justification={self._justification}, "
+                f"is_valid={self.is_valid}, errors={self.errors})")

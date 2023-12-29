@@ -1,11 +1,11 @@
-from data_import.import_notification import import_notification
+from data_import.import_notification import import_notifications_from_excel
 from data_operations.notification_data_operations import *
 from datetime import datetime
 
 class NotificationController:
     def __init__(self, data_path):
         self.data_path = data_path
-        self.valid_notifications, self.invalid_notifications = import_notification(self.data_path)
+        self.valid_notifications, self.invalid_notifications = import_notifications_from_excel(self.data_path)
 
     def get_initial_data(self):
         current_date_str = datetime.now().strftime('%d/%m/%Y')
