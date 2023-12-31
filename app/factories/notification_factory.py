@@ -6,7 +6,7 @@ def create_notification(data):
         quota=data['Cota'],
         send_date=data['DataDeEnvio'],
         return_date=data['DataDeRetorno'],
-        notification_return_type=data['TipoDoRetorno'],
+        return_type=data['TipoDoRetorno'],
         office=data['Escritório'],
         state=data['UF'],
         registry_office=data.get('Cartório'),

@@ -1,24 +1,40 @@
 from utils.notification_validations import *
 from utils.type_conversion import convert_date
+from sqlalchemy import Column, Integer, String, Date
+from database.database_config import Base
 
-class Notification:
-    def __init__(self, group, quota, send_date, return_date, notification_return_type, office, state, registry_office, name, contract, justification):
-        # Initialize all attributes
-        self._group = group
-        self._quota = quota
-        self._send_date = send_date
-        self._return_date = return_date
-        self._notification_return_type = notification_return_type
-        self._office = office
-        self._state = state
-        self._registry_office = registry_office
-        self._name = name
-        self._contract = contract
-        self._justification = justification
-        
+class Notification(Base):
+    __tablename__ = 'notificações'
+
+    id = Column(Integer, primary_key=True)
+    _group = Column(String, name='Grupo')
+    _quota = Column(String, name='Cota')
+    _send_date = Column(Date, name='DataDeEnvio')
+    _return_date = Column(Date, name='DataDeRetorno')
+    _return_type = Column(String, name='TipoDoRetorno')
+    _office = Column(String, name='Escritório')
+    _state = Column(String, name='UF')
+    _registry_office = Column(String, name='Cartório')
+    _name = Column(String, name='Nome')
+    _contract = Column(String, name='Contrato')
+    _justification = Column(String, name='Justificativa')
+
+    def __init__(self, group, quota, send_date, return_date, return_type, office, state, registry_office, name, contract, justification):
+        self.group = group
+        self.quota = quota
+        self.send_date = send_date
+        self.return_date = return_date
+        self.return_type = return_type
+        self.office = office
+        self.state = state
+        self.registry_office = registry_office
+        self.name = name
+        self.contract = contract
+        self.justification = justification
+
         # Perform validation
         self.is_valid, self.errors = validate_notification_data(
-            group, quota, send_date, return_date, notification_return_type, office, state, registry_office, name, contract, justification)
+            group, quota, send_date, return_date, return_type, office, state, registry_office, name, contract, justification)
         
         # Convert the dates if the notification is valid
         if self.is_valid:
@@ -29,101 +45,128 @@ class Notification:
             self._send_date = send_date
             self._return_date = return_date
 
-    # Getters and Setters with validation
-    def get_group(self):
+    # Group
+    @property
+    def group(self):
         return self._group
 
-    def set_group(self, group):
-        self._group = validate_numeric(group)
+    @group.setter
+    def group(self, value):
+        self._group = validate_numeric(value, "group")
 
-    def get_quota(self):
+    # Quota
+    @property
+    def quota(self):
         return self._quota
 
-    def set_quota(self, quota):
-        self._quota = validate_numeric(quota)
+    @quota.setter
+    def quota(self, value):
+        self._quota = validate_numeric(value, "quota")
 
-    def get_send_date(self):
+    # Send Date
+    @property
+    def send_date(self):
         return self._send_date
 
-    def set_send_date(self, send_date):
-        self._send_date = validate_date(send_date)
+    @send_date.setter
+    def send_date(self, value):
+        self._send_date = validate_date(value)
 
-    def get_return_date(self):
+    # Return Date
+    @property
+    def return_date(self):
         return self._return_date
 
-    def set_return_date(self, return_date):
-        self._return_date = validate_date(return_date)
+    @return_date.setter
+    def return_date(self, value):
+        self._return_date = validate_date(value)
 
-    def get_notification_return_type(self):
-        return self._notification_return_type
+    # Return Type
+    @property
+    def return_type(self):
+        return self._return_type
 
-    def set_notification_return_type(self, notification_return_type):
-        self._notification_return_type = validate_not_empty(notification_return_type, "Notification return type")
+    @return_type.setter
+    def return_type(self, value):
+        self._return_type = validate_not_empty(value, "Return Type")
 
-    def get_office(self):
+    # Office
+    @property
+    def office(self):
         return self._office
 
-    def set_office(self, office):
-        self._office = validate_not_empty(office, "Office")
+    @office.setter
+    def office(self, value):
+        self._office = validate_not_empty(value, "Office")
 
-    def get_state(self):
+    # State
+    @property
+    def state(self):
         return self._state
 
-    def set_state(self, state):
-        self._state = validate_state(state)
+    @state.setter
+    def state(self, value):
+        self._state = validate_state(value)
 
-    def get_registry_office(self):
+    # Registry Office
+    @property
+    def registry_office(self):
         return self._registry_office
 
-    def set_registry_office(self, registry_office):
-        self._registry_office = validate_not_empty(registry_office, "Registry office")
+    @registry_office.setter
+    def registry_office(self, value):
+        self._registry_office = validate_not_empty(value, "Registry Office")
 
-    def get_name(self):
+    # Name
+    @property
+    def name(self):
         return self._name
 
-    def set_name(self, name):
-        self._name = validate_not_empty(name, "Name")
+    @name.setter
+    def name(self, value):
+        self._name = validate_not_empty(value, "Name")
 
-    def get_contract(self):
+    # Contract
+    @property
+    def contract(self):
         return self._contract
 
-    def set_contract(self, contract):
-        self._contract = validate_numeric(contract)
+    @contract.setter
+    def contract(self, value):
+        self._contract = validate_numeric(value, "contract")
 
-    def get_justification(self):
+    # Justification
+    @property
+    def justification(self):
         return self._justification
 
-    def set_justification(self, justification):
-        self._justification = validate_not_empty(justification, "Justification")
+    @justification.setter
+    def justification(self, value):
+        self._justification = validate_not_empty(value, "Justification")
 
     def revalidate(self):
-        # Reapply the validation logic
         self.is_valid, self.errors = validate_notification_data(
-            self._group, self._quota, self._send_date, self._return_date, self._notification_return_type,
-            self._office, self._state, self._registry_office, self._name, self._contract, self._justification
+            self.group, self.quota, self.send_date, self.return_date, self.return_type,
+            self.office, self.state, self.registry_office, self.name, self.contract, self.justification
         )
 
-        # Convert the dates if the notification is valid
         if self.is_valid:
-            self._send_date = convert_date(self._send_date)
-            self._return_date = convert_date(self._return_date)
+            self.send_date = convert_date(self.send_date)
+            self.return_date = convert_date(self.return_date)
             return {"status": "success", "message": "Notification successfully validated."}
         else:
-            # Return information about the validation errors
             return {"status": "error", "message": "Validation errors found.", "errors": self.errors}
 
-    # Magic methods
     def __eq__(self, other):
         if not isinstance(other, Notification):
             return False
-        return (self._group, self._quota) == (other._group, other._quota)
+        return (self.group, self.quota) == (other.group, other.quota)
 
     def __hash__(self):
-        return hash((self._group, self._quota))
+        return hash((self.group, self.quota))
 
     def __str__(self):
-        return (f"Notification(group={self._group}, quota={self._quota}, send_date={self._send_date}, "
-                f"return_date={self._return_date}, notification_return_type={self._notification_return_type}, "
-                f"office={self._office}, state={self._state}, registry_office={self._registry_office}, "
-                f"name={self._name}, contract={self._contract}, justification={self._justification}, "
-                f"is_valid={self.is_valid}, errors={self.errors})")
+        return (f"Notification(group={self.group}, quota={self.quota}, send_date={self.send_date}, "
+                f"return_date={self.return_date}, return_type={self.return_type}, office={self.office}, "
+                f"state={self.state}, registry_office={self.registry_office}, name={self.name}, "
+                f"contract={self.contract}, justification={self.justification}, is_valid={self.is_valid}, errors={self.errors})")

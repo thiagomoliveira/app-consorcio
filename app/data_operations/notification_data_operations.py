@@ -14,8 +14,8 @@ def filter_notifications(notifications, start_date=None, end_date=None, states=N
         end_date = end_date.replace(day=last_day)
     
     for notification in notifications:
-        send_date = notification.get_send_date()
-        state = notification.get_state()
+        send_date = notification.send_date  
+        state = notification.state  
         
         if (start_date and send_date <= start_date) or (end_date and send_date >= end_date):
             continue
@@ -35,12 +35,12 @@ def group_notifications_by_type_and_date(notifications, granularity='monthly'):
 
     for notification in notifications:
         
-        send_date = notification.get_send_date()
+        send_date = notification.send_date  
         # Adjusting the date to include only year and month
         if granularity == 'monthly':
             send_date = send_date.strftime('%Y-%m')
 
-        return_type = notification.get_notification_return_type()
+        return_type = notification.return_type  
         
         key = (send_date, return_type)
 
@@ -78,8 +78,8 @@ def group_notifications_by_state(notifications):
     state_grouping = {}
     
     for notification in notifications:
-        state = notification.get_state()
-        return_type = notification.get_notification_return_type()
+        state = notification.state 
+        return_type = notification.return_type 
         
         if state not in state_grouping:
             state_grouping[state] = {'todas': 0, 'positiva': 0, 'negativa': 0, 'notificando': 0}

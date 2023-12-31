@@ -6,6 +6,8 @@ from controllers.notification_controller import NotificationController
 from widgets.filtros_widget import FilterWidget
 from widgets.brasil_map_widget import BrasilMapWidget
 from widgets.notification_line_chart_widget import NotificationLineChartWidget
+import initial_setup
+
 
 # Create the main application
 app = QApplication(sys.argv)
