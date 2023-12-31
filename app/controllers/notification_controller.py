@@ -1,4 +1,4 @@
-from data_import.import_notification import import_notifications_from_excel
+from services.notification_service import *
 from data_operations.notification_data_operations import *
 from datetime import datetime
 
