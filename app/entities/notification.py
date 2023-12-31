@@ -20,21 +20,18 @@ class Notification(Base):
     _justification = Column(String, name='Justificativa')
 
     def __init__(self, group, quota, send_date, return_date, return_type, office, state, registry_office, name, contract, justification):
-        self.group = group
-        self.quota = quota
-        self.send_date = send_date
-        self.return_date = return_date
-        self.return_type = return_type
-        self.office = office
-        self.state = state
-        self.registry_office = registry_office
-        self.name = name
-        self.contract = contract
-        self.justification = justification
-
-        # Perform validation
+         # Perform validation
         self.is_valid, self.errors = validate_notification_data(
             group, quota, send_date, return_date, return_type, office, state, registry_office, name, contract, justification)
+        self._group = group
+        self._quota = quota
+        self._return_type = return_type
+        self._office = office
+        self._state = state
+        self._registry_office = registry_office
+        self._name = name
+        self._contract = contract
+        self._justification = justification
         
         # Convert the dates if the notification is valid
         if self.is_valid:
