@@ -1,6 +1,8 @@
 import pandas as pd
 from entities.notification import Notification
 from factories.notification_factory import create_notification
+from utils.notification_validations import validate_notification_data
+from utils.type_conversion import convert_date
 
 def add_notifications_to_database(session, notifications):
     try:
@@ -24,3 +26,16 @@ def import_notifications_from_excel(file_path):
             invalid_notifications.append(notification)
 
     return valid_notifications, invalid_notifications
+
+def revalidate_notification(self):
+        self.is_valid, self.errors = validate_notification_data(
+            self.group, self.quota, self.send_date, self.return_date, self.return_type,
+            self.office, self.state, self.registry_office, self.name, self.contract, self.justification
+        )
+
+        if self.is_valid:
+            self.send_date = convert_date(self.send_date)
+            self.return_date = convert_date(self.return_date)
+            return {"status": "success", "message": "Notification successfully validated."}
+        else:
+            return {"status": "error", "message": "Validation errors found.", "errors": self.errors}

@@ -141,19 +141,6 @@ class Notification(Base):
     def justification(self, value):
         self._justification = validate_not_empty(value, "Justification")
 
-    def revalidate(self):
-        self.is_valid, self.errors = validate_notification_data(
-            self.group, self.quota, self.send_date, self.return_date, self.return_type,
-            self.office, self.state, self.registry_office, self.name, self.contract, self.justification
-        )
-
-        if self.is_valid:
-            self.send_date = convert_date(self.send_date)
-            self.return_date = convert_date(self.return_date)
-            return {"status": "success", "message": "Notification successfully validated."}
-        else:
-            return {"status": "error", "message": "Validation errors found.", "errors": self.errors}
-
     def __eq__(self, other):
         if not isinstance(other, Notification):
             return False
