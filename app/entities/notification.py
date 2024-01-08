@@ -153,4 +153,4 @@ class Notification(Base):
         return (f"Notification(group={self.group}, quota={self.quota}, send_date={self.send_date}, "
                 f"return_date={self.return_date}, return_type={self.return_type}, office={self.office}, "
                 f"state={self.state}, registry_office={self.registry_office}, name={self.name}, "
-                f"contract={self.contract}, justification={self.justification}, is_valid={self.is_valid}, errors={self.errors})")
+                f"contract={self.contract}, justification={self.justification})")
